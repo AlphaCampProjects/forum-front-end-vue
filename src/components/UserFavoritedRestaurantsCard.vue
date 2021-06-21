@@ -1,31 +1,31 @@
 <template>
   <div class="card">
-    <div class="card-header"><strong>3</strong> 收藏的餐廳</div>
+    <div class="card-header">
+      <strong>{{ FavoritedRestaurants.length }}</strong> 收藏的餐廳
+    </div>
     <div class="card-body">
-      <a href="/restaurants/3">
+      <router-link
+        v-for="FavoritedRestaurant in FavoritedRestaurants"
+        :key="FavoritedRestaurant.id"
+        :to="{ name: 'restaurant', params: { id: FavoritedRestaurant.id } }"
+      >
         <img
-          src="https://loremflickr.com/320/240/restaurant,food/?random=79.91299846538044"
+          :src="FavoritedRestaurant.image"
           width="60"
           height="60"
           class="avatar"
         />
-      </a>
-      <a href="/restaurants/5">
-        <img
-          src="https://loremflickr.com/320/240/restaurant,food/?random=36.36127013737524"
-          width="60"
-          height="60"
-          class="avatar"
-        />
-      </a>
-      <a href="/restaurants/13">
-        <img
-          src="https://loremflickr.com/320/240/restaurant,food/?random=75.12026971384928"
-          width="60"
-          height="60"
-          class="avatar"
-        />
-      </a>
+      </router-link>
     </div>
   </div>
 </template>
+<script>
+export default {
+  props: {
+    FavoritedRestaurants: {
+      type: Array,
+      required: true,
+    },
+  },
+};
+</script>

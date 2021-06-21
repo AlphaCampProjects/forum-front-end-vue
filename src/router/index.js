@@ -48,7 +48,7 @@ const routes = [
     component: () => import('../views/RestaurantDashboard.vue'),
   },
   {
-    path: '/user',
+    path: '/user/:id',
     name: 'user',
     component: () => import('../views/User.vue'),
   },

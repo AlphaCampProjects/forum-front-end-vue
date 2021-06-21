@@ -2,17 +2,20 @@
   <main role="main">
     <div class="album py-5 bg-light">
       <div class="container">
-        <UserProfileCard :initial-profile="profile" :initial-isFollowed="isFollowed"/>
+        <UserProfileCard
+          :initial-profile="profile"
+          :initial-is-followed="isFollowed"
+        />
         <div class="row">
           <div class="col-md-4">
-            <UserFollowingsCard />
+            <UserFollowingsCard :followings="Followings"/>
             <br />
-            <UserFollowersCard />
+            <UserFollowersCard :followers="Followers"/>
           </div>
           <div class="col-md-8">
-            <UserCommentsCard />
+            <UserCommentsCard :comments="Comments"/>
             <br />
-            <UserFavoritedRestaurantsCard />
+            <UserFavoritedRestaurantsCard :favorited-restaurants="FavoritedRestaurants"/>
           </div>
         </div>
       </div>
@@ -1320,7 +1323,6 @@ export default {
     };
   },
   methods: {
-    
     fetchUser() {
       const { profile, isFollowed } = dummyData;
       const {

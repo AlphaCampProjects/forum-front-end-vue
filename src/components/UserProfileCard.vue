@@ -61,11 +61,7 @@ export default {
       type: Object,
       required: true,
     },
-    currentUser: {
-      type: Object,
-      required: true,
-    },
-    initialIsfollowed: {
+    initialIsFollowed: {
       type: Boolean,
       required: true,
     },
@@ -73,7 +69,7 @@ export default {
   data() {
     return {
       profile: this.initialProfile,
-      isFollowed: this.initialIsfollowed,
+      isFollowed: this.initialIsFollowed,
     };
   },
   methods: {
