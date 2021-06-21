@@ -29,7 +29,11 @@
             <p class="card-text">
               {{ restaurant.description }}
             </p>
-            <a href="#" class="btn btn-primary mr-2">Show</a>
+            <router-link
+              :to="{ name: 'restaurant', params: { id: restaurant.id } }"
+              class="btn btn-primary mr-2"
+              >Show</router-link
+            >
 
             <button
               v-if="restaurant.isFavorited"
@@ -517,14 +521,13 @@ export default {
       let restaurant = this.restaurants.find(
         (restaurant) => restaurant.id === id
       );
-
       restaurant.isFavorited = true;
-      // console.log(restaurant.isFavorited);
-      // restaurant = {
+      // const index = this.restaurants.indexOf(restaurant);
+      // console.log(this.restaurants[index]);
+      //      this.restaurants[index] = {
       //   ...restaurant,
       //   isFavorited: true,
       // };
-      // console.log(restaurant.isFavorited);
     },
   },
   created() {
