@@ -2,7 +2,7 @@
   <main role="main">
     <div class="album py-5 bg-light">
       <div class="container">
-        <UserProfileCard />
+        <UserProfileCard :initial-profile="profile" :initial-isFollowed="isFollowed"/>
         <div class="row">
           <div class="col-md-4">
             <UserFollowingsCard />
@@ -1307,6 +1307,10 @@ export default {
         email: '',
         image: '',
         isAdmin: false,
+        commentsCount: 0,
+        favoritedCount: 0,
+        followingsCount: 0,
+        followersCount: 0,
       },
       Comments: [],
       FavoritedRestaurants: [],
@@ -1316,6 +1320,7 @@ export default {
     };
   },
   methods: {
+    
     fetchUser() {
       const { profile, isFollowed } = dummyData;
       const {
@@ -1335,6 +1340,10 @@ export default {
         email,
         image,
         isAdmin,
+        commentsCount: Comments.length,
+        favoritedCount: FavoritedRestaurants.length,
+        followingsCount: Followings.length,
+        followersCount: Followers.length,
       };
       this.Comments = Comments;
       this.FavoritedRestaurants = FavoritedRestaurants;
