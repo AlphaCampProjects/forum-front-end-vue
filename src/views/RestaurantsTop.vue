@@ -15,7 +15,7 @@
       <div class="row no-gutters">
         <div class="col-md-4">
           <a href="#">
-            <img class="card-img" :src="restaurant.image" />
+            <img class="card-img" :src="restaurant.image | emptyImage" />
           </a>
         </div>
         <div class="col-md-8">
@@ -58,6 +58,8 @@
   </div>
 </template>
 <script>
+import { emptyImageFilter } from './../utils/mixins';
+
 import NavTabs from './../components/NavTabs.vue';
 const dummyData = {
   restaurants: [
@@ -499,6 +501,7 @@ const dummyData = {
   ],
 };
 export default {
+  mixins:[emptyImageFilter],
   components: {
     NavTabs,
   },

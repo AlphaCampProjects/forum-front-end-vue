@@ -13,7 +13,7 @@
           </router-link>
         </h4>
         <p>{{ comment.text }}</p>
-        <router-link :to="{name:'user', params:{id:comment.User.id}}">
+        <router-link :to="{ name: 'user', params: { id: comment.User.id } }">
           {{ comment.User.name }}
         </router-link>
         {{ comment.createdAt | fromNow }}
