@@ -64,8 +64,12 @@
         />
       </div>
 
-      <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">
-        Submit
+      <button
+        class="btn btn-lg btn-primary btn-block mb-3"
+        type="submit"
+        :disabled="isProcessing"
+      >
+        {{ isProcessing ? '處理中' : '送出' }}
       </button>
 
       <div class="text-center mb-3">
@@ -84,6 +88,8 @@
 </template>
 
 <script>
+import { Toast } from '../utils/helpers';
+import authorizationAPI from './../apis/authorization';
 export default {
   data() {
     return {
@@ -91,17 +97,63 @@ export default {
       email: '',
       password: '',
       passwordCheck: '',
+      isProcessing: false,
     };
   },
   methods: {
-    handleSubmit() {
-      const data = JSON.stringify({
-        name: this.name,
-        email: this.email,
-        password: this.password,
-        passwordCheck: this.passwordCheck,
-      });
-      console.log('data', data);
+    async handleSubmit() {
+      try {
+        // 確認欄位都有填寫
+        this.isProcessing = true;
+        if (
+          !this.name ||
+          !this.email ||
+          !this.password ||
+          !this.passwordCheck
+        ) {
+          this.isProcessing = false;
+          Toast.fire({
+            icon: 'warning',
+            title: '請確認所有欄位皆已填寫！',
+          });
+          return;
+        }
+        // 確認兩次密碼輸入正確
+        if (this.password !== this.passwordCheck) {
+          this.isProcessing = false;
+          Toast.fire({
+            icon: 'warning',
+            title: '您輸入兩次的密碼不相符，請再次輸入',
+          });
+          this.passwordCheck = '';
+          return;
+        }
+
+        const formData = {
+          name: this.name,
+          email: this.email,
+          password: this.password,
+          passwordCheck: this.passwordCheck,
+        };
+        const { data } = await authorizationAPI.signUp({ formData });
+
+        if (data.status !== 'success') {
+          throw new Error(data.message);
+        }
+        // 成功登入後轉址到登入頁
+        this.$router.push('/signin');
+
+        Toast.fire({
+          icon: 'success',
+          title: '註冊成功',
+        });
+      } catch (error) {
+        console.log('error: ', error);
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法註冊，請稍後再試',
+        });
+      }
     },
   },
 };

@@ -35,7 +35,7 @@ export default {
   mixins: [emptyImageFilter],
   props: {
     initialUser: {
-      type: Object,
+      type: Array,
       required: true,
     },
   },
