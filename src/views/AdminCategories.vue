@@ -132,6 +132,7 @@ export default {
         });
       }
     },
+
     // Create the category
     async createCategory() {
       try {
@@ -139,17 +140,13 @@ export default {
         const { data } = await adminAPI.categories.create({ name });
         console.log('data: ', data);
         this.newCategoryName = '';
-      }catch (error) {
+      } catch (error) {
         console.log('error: ', error);
         Toast.fire({
           icon: 'error',
           title: '無法取得新增餐廳類別，請稍後再試',
         });
       }
-      // this.categories.push({
-      //   id: uuidv4(),
-      //   name: this.newCategoryName,
-      // });
     },
     deleteCategory(categoryId) {
       this.categories = this.categories.filter(
@@ -168,9 +165,31 @@ export default {
         return category;
       });
     },
-    updateCategory({ categoryId, name }) {
-      console.log(name);
-      this.toggleIsEditing(categoryId);
+    // Update the category
+    async updateCategory({ categoryId, name }) {
+      try {
+        if(!name){
+        Toast.fire({
+          icon: 'warning',
+          title: '請輸入類別名稱',
+        });
+        return
+      }
+        console.log('in');
+        const {data} = await adminAPI.categories.update({categoryId, name})
+        if (data.status !=='success'){
+          throw new Error(data.message)
+        }
+        this.toggleIsEditing(categoryId);
+
+      } catch (error) {
+        console.log('error: ', error);
+        Toast.fire({
+          icon: 'error',
+          title: '無法更新類別名稱，請稍後再試',
+        });
+      }
+     
     },
     handleCancel(categoryId) {
       this.categories = this.categories.map((category) => {
