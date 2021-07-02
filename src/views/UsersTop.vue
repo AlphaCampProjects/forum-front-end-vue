@@ -133,6 +133,7 @@ export default {
         });
       }
     },
+    
   },
   created() {
     this.fetchUsers();
