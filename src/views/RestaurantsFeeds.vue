@@ -44,6 +44,7 @@ export default {
       try {
         const response = await restaurantsAPI.getFeeds();
         const { restaurants, comments } = response.data;
+        console.log('response: ', response);
         this.restaurants = restaurants;
         // 過濾掉沒有選擇餐廳或是沒有評論的comments
         this.comments = comments.filter(

@@ -11,11 +11,12 @@
           type="button"
           class="btn btn-danger float-right"
           @click.stop.prevent="handleDeleteButtonClick(comment.id)"
+          :disabled="isProcessing"
         >
           Delete
         </button>
         <h3>
-          <router-link :to="{name:'user', params:{id:comment.User.id}}">
+          <router-link :to="{ name: 'user', params: { id: comment.User.id } }">
             {{ comment.User.name }}
           </router-link>
         </h3>
@@ -31,16 +32,9 @@
 
 <script>
 import { fromNowFilter } from './../utils/mixins';
-const dummyUser = {
-  currentUser: {
-    id: 1,
-    name: '管理者',
-    email: 'root@example.com',
-    image: 'https://i.pravatar.cc/300',
-    isAdmin: true,
-  },
-  isAuthenticated: true,
-};
+import { mapState } from 'vuex';
+import commentsAPI from './../apis/comments';
+import { Toast } from '../utils/helpers';
 export default {
   mixins: [fromNowFilter],
   props: {
@@ -51,13 +45,31 @@ export default {
   },
   data() {
     return {
-      currentUser: dummyUser.currentUser,
+      isProcessing: false,
     };
   },
+  computed: {
+    ...mapState(['currentUser']),
+  },
   methods: {
-    handleDeleteButtonClick(commentId) {
-      console.log('handleDeleteButtonClick', commentId);
-      this.$emit('after-delete-comment', commentId)
+    async handleDeleteButtonClick(commentId) {
+      try {
+        this.isProcessing = true;
+        const { data } = await commentsAPI.delete({ commentId });
+        if (data.status !== 'success') {
+          throw new Error(data.message);
+        }
+        console.log('handleDeleteButtonClick', commentId);
+        this.$emit('after-delete-comment', commentId);
+        this.isProcessing = false
+      } catch (error) {
+        this.isProcessing = false
+        console.log('error: ', error);
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法刪除評論，請稍後再試',
+        });
+      }
     },
   },
 };

@@ -171,41 +171,6 @@ export default {
         });
       }
     },
-    // Delete the category
-    async deleteCategory(categoryId) {
-      try {
-        const { data } = await adminAPI.categories.delete({ categoryId });
-        console.log('data: ', data);
-        if (data.status !== 'success') {
-          throw new Error(data.message);
-        }
-        Toast.fire({
-          icon: 'success',
-          title: '刪除餐廳類別成功',
-        });
-        this.categories = this.categories.filter(
-          (category) => category.id !== categoryId
-        );
-      } catch (error) {
-        console.log('error: ', error);
-        Toast.fire({
-          icon: 'error',
-          title: '無法刪除餐廳類別，請稍後再試',
-        });
-      }
-    },
-    toggleIsEditing(categoryId) {
-      this.categories = this.categories.map((category) => {
-        if (category.id === categoryId) {
-          return {
-            ...category,
-            isEditing: !category.isEditing,
-            nameCached: category.name,
-          };
-        }
-        return category;
-      });
-    },
     // Update the category
     async updateCategory({ categoryId, name }) {
       try {
@@ -230,6 +195,43 @@ export default {
         });
       }
     },
+    // Delete the category
+    async deleteCategory(categoryId) {
+      try {
+        const { data } = await adminAPI.categories.delete({ categoryId });
+        console.log('data: ', data);
+        if (data.status !== 'success') {
+          throw new Error(data.message);
+        }
+        Toast.fire({
+          icon: 'success',
+          title: '刪除餐廳類別成功',
+        });
+        //將該餐廳從列表中移除
+        this.categories = this.categories.filter(
+          (category) => category.id !== categoryId
+        );
+      } catch (error) {
+        console.log('error: ', error);
+        Toast.fire({
+          icon: 'error',
+          title: '無法刪除餐廳類別，請稍後再試',
+        });
+      }
+    },
+    toggleIsEditing(categoryId) {
+      this.categories = this.categories.map((category) => {
+        if (category.id === categoryId) {
+          return {
+            ...category,
+            isEditing: !category.isEditing,
+            nameCached: category.name,
+          };
+        }
+        return category;
+      });
+    },
+    
     handleCancel(categoryId) {
       this.categories = this.categories.map((category) => {
         if (category.id === categoryId) {

@@ -18,11 +18,12 @@
 
     <div id="navbarSupportedContent" class="navbar-collapse collapse">
       <div class="ml-auto d-flex align-items-center">
-        <!-- is user is admin -->
-        <router-link to="/admin/restaurants" class="text-white mr-3">
-          管理員後台
-        </router-link>
         <template v-if="isAuthenticated">
+          <!-- is user is admin -->
+          <router-link to="/admin/restaurants" class="text-white mr-3">
+            管理員後台
+          </router-link>
+
           <!-- is user is login -->
           <router-link to="#" class="text-white mr-3">
             {{ currentUser.name || 使用者 }} 您好
@@ -46,42 +47,10 @@
 </template>
 
 <script>
-const dummyUser = {
-  currentUser: {
-    id: 1,
-    name: '管理者',
-    email: 'root@example.com',
-    image: 'https://i.pravatar.cc/300',
-    isAdmin: true,
-  },
-  isAuthenticated: true,
-};
+import { mapState } from 'vuex';
 export default {
-  // Vue 會在沒有資料時使用此預設值
-  data() {
-    return {
-      currentUser: {
-        id: -1,
-        name: '',
-        email: '',
-        image: '',
-        isAdmin: false,
-      },
-      isAuthenticated: false,
-    };
-  },
-  methods: {
-    fetchUser() {
-      this.currentUser = {
-        ...this.currentUser,
-        ...dummyUser.currentUser,
-      };
-      this.isAuthenticated = dummyUser.isAuthenticated;
-    },
-  },
-  created() {
-    console.log('fetchUser');
-    this.fetchUser();
+  computed: {
+    ...mapState(['currentUser', 'isAuthenticated'])
   },
 };
 </script>

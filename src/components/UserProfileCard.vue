@@ -74,6 +74,14 @@ export default {
       isFollowed: this.initialIsFollowed,
     };
   },
+  watch:{
+    initialProfile(newValue){
+      this.profile= {
+        ...this.profile,
+        ...newValue
+      }
+    }
+  },
   methods: {
     deleteFollowed() {
       this.isFollowed = false;
