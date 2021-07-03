@@ -56,7 +56,13 @@ export default {
   computed: {
     ...mapState(['currentUser']),
   },
+  beforeRouteUpdate(to, from, next) {
+    const { id } = to.params;
+    this.setUser(id)
+    next()
+  },
   watch: {
+    // currentUser是透過非同步取得，若變更需要再呼叫一次 setUser
     currentUser(user) {
       if (user.id === -1) return;
       const { id } = this.$route.params;
@@ -66,8 +72,9 @@ export default {
   methods: {
     setUser(userId) {
       const { id, name, image } = this.currentUser;
+      // 如果 currentUser 的 id 和 userId 不同，則轉址去 404
       if (id.toString() !== userId.toString()) {
-        this.$route.push({ name: 'not-found' });
+        this.$router.push({ name: 'not-found' });
         return;
       }
       this.name = name;
@@ -87,7 +94,7 @@ export default {
     },
     async handleSubmit(e) {
       try {
-        if (!name) {
+        if (!this.name) {
           Toast.fire({
             icon: 'warning',
             title: '請輸入姓名',
