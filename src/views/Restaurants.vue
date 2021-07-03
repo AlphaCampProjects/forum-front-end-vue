@@ -102,7 +102,7 @@ export default {
         this.isLoading = false
         console.log('error', error)
         Toast.fire({
-          icon: 'warning',
+          icon: 'error',
           title: '無法取得餐廳資料，請稍後再試',
         })
       }
