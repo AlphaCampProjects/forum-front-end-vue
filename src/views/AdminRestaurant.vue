@@ -1,6 +1,7 @@
 <template>
   <div class="container py-5">
-    <div class="row">
+    <Spinner v-if="isLoading" />
+    <div class="row" v-else>
       <div class="col-md-12">
         <h1>{{ restaurant.name }}</h1>
         <span class="badge badge-secondary mt-1 mb-3">
@@ -41,13 +42,17 @@
   </div>
 </template>
 <script>
-import { emptyImageFilter } from './../utils/mixins';
-import adminAPI from './../apis/admin';
-import { Toast } from '../utils/helpers';
+import { emptyImageFilter } from './../utils/mixins'
+import adminAPI from './../apis/admin'
+import { Toast } from '../utils/helpers'
+import Spinner from './../components/Spinner.vue'
+
 export default {
   name: 'AdminRestaurant',
   mixins: [emptyImageFilter],
-
+  components: {
+    Spinner,
+  },
   data() {
     return {
       restaurant: {
@@ -60,13 +65,27 @@ export default {
         address: '',
         description: '',
       },
-    };
+      isLoading: true,
+    }
+  },
+  mounted() {
+    const { id: restaurantId } = this.$route.params
+    this.fetchRestaurant(restaurantId)
+  },
+  beforeRouteUpdate(to, from, next) {
+    const { id } = to.params
+    this.fetchRestaurant(id)
+    next()
   },
   methods: {
     async fetchRestaurant(restaurantId) {
       try {
-        const { data } = await adminAPI.restaurants.getDetail({restaurantId})
-        const { restaurant } = data;
+        const { data } = await adminAPI.restaurants.getDetail({ restaurantId })
+        if (data.status === 'error') {
+          throw new Error(data.message)
+        }
+
+        const { restaurant } = data
         const {
           id,
           name,
@@ -76,7 +95,7 @@ export default {
           tel,
           address,
           description,
-        } = restaurant;
+        } = restaurant
         this.restaurant = {
           ...restaurant,
           id,
@@ -87,24 +106,17 @@ export default {
           tel,
           address,
           description,
-        };
+        }
+        this.isLoading = false
       } catch (error) {
-        console.log('error: ', error);
+        this.isLoading = false
+        console.log('error: ', error)
         Toast.fire({
-          icon:'error',
-          title:'無法載入餐廳內容，清稍後再試'
+          icon: 'error',
+          title: '無法載入餐廳內容，清稍後再試',
         })
       }
     },
   },
-  mounted() {
-    const { id: restaurantId } = this.$route.params;
-    this.fetchRestaurant(restaurantId);
-  },
-  beforeRouteUpdate(to,from, next){
-    const {id} = to.params
-    this.fetchRestaurant(id)
-    next()
-  }
-};
+}
 </script>

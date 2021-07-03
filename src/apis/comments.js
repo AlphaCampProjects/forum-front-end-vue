@@ -1,19 +1,10 @@
-import { apiHelper } from '../utils/helpers';
-const getToken = () => localStorage.getItem('token');
+import { apiHelper } from '../utils/helpers'
 
 export default {
   delete({ commentId }) {
-    return apiHelper.delete(`/comments/${commentId}`, {
-      headers: { Authorization: `Bearer ${getToken()}` },
-    });
+    return apiHelper.delete(`/comments/${commentId}`)
   },
   create({ restaurantId, text }) {
-    return apiHelper.post(
-      `/comments`,
-      { restaurantId, text },
-      {
-        headers: { Authorization: `Bearer ${getToken()}` },
-      }
-    );
+    return apiHelper.post(`/comments`, { restaurantId, text })
   },
-};
+}

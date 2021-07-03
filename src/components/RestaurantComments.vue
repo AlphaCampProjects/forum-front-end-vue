@@ -31,10 +31,10 @@
 </template>
 
 <script>
-import { fromNowFilter } from './../utils/mixins';
-import { mapState } from 'vuex';
-import commentsAPI from './../apis/comments';
-import { Toast } from '../utils/helpers';
+import { fromNowFilter } from './../utils/mixins'
+import { mapState } from 'vuex'
+import commentsAPI from './../apis/comments'
+import { Toast } from '../utils/helpers'
 export default {
   mixins: [fromNowFilter],
   props: {
@@ -46,7 +46,7 @@ export default {
   data() {
     return {
       isProcessing: false,
-    };
+    }
   },
   computed: {
     ...mapState(['currentUser']),
@@ -54,23 +54,39 @@ export default {
   methods: {
     async handleDeleteButtonClick(commentId) {
       try {
-        this.isProcessing = true;
-        const { data } = await commentsAPI.delete({ commentId });
+        this.isProcessing = true
+        
+        const { data } = await commentsAPI.delete({ commentId })
         if (data.status !== 'success') {
-          throw new Error(data.message);
+          throw new Error(data.message)
         }
-        console.log('handleDeleteButtonClick', commentId);
-        this.$emit('after-delete-comment', commentId);
+        console.log('handleDeleteButtonClick', commentId)
+        this.$emit('after-delete-comment', commentId)
         this.isProcessing = false
       } catch (error) {
         this.isProcessing = false
-        console.log('error: ', error);
+        console.log('error: ', error)
         Toast.fire({
           icon: 'error',
           title: '目前無法刪除評論，請稍後再試',
-        });
+        })
       }
     },
   },
-};
+}
 </script>
+<style scoped>
+h2.my-4 {
+  margin-bottom: 1rem !important;
+  font-size: 18px;
+}
+
+h3 {
+  margin-bottom: 3px;
+  line-height: 1.3;
+}
+
+.blockquote-footer {
+  font-size: 12.5px;
+}
+</style>

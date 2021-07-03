@@ -1,5 +1,6 @@
 <template>
-  <table class="table">
+  <Spinner v-if="isLoading" />
+  <table class="table" v-else>
     <thead class="thead-dark">
       <tr>
         <th scope="col">
@@ -53,56 +54,63 @@
 </template>
 
 <script>
-import { Toast } from '../utils/helpers';
-import adminAPI from './../apis/admin';
+import Spinner from './../components/Spinner.vue'
+import { Toast } from '../utils/helpers'
+import adminAPI from './../apis/admin'
+
 export default {
+  components: {
+    Spinner,
+  },
   data() {
     return {
       restaurants: [],
-    };
+      isLoading: true,
+    }
   },
   methods: {
     async fetchRestaurants() {
       try {
-        const { data } = await adminAPI.restaurants.get();
-        console.log('data: ', data);
+        const { data } = await adminAPI.restaurants.get()
+        console.log('data: ', data)
 
-        this.restaurants = data.restaurants;
+        this.restaurants = data.restaurants
+        this.isLoading = false
       } catch (error) {
-        console.log('error: ', error);
+        this.isLoading = false
+        console.log('error: ', error)
         Toast.fire({
           icon: 'error',
           title: '無法載入餐廳清單，請稍後再試',
-        });
+        })
       }
     },
     async deleteRestaurant(restaurantId) {
       try {
-        console.log(restaurantId);
-        const { data } = await adminAPI.restaurants.delete({ restaurantId });        
+        const { data } = await adminAPI.restaurants.delete({ restaurantId })
         if (data.status !== 'success') {
-          throw new Error(data.message);
+          throw new Error(data.message)
         }
-        
+
         this.restaurants = this.restaurants.filter(
           (restaurant) => restaurant.id !== restaurantId
-        );
-        console.log('success');
+        )
+        console.log('success')
 
         Toast.fire({
           icon: 'success',
           title: '刪除餐廳成功',
-        });
+        })
       } catch (error) {
         Toast.fire({
           icon: 'error',
           title: '無法刪除餐廳，請稍後再試',
-        });
+        })
       }
     },
   },
   created() {
-    this.fetchRestaurants();
+    this.fetchRestaurants()
   },
-};
+}
 </script>

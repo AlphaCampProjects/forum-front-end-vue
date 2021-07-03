@@ -1,6 +1,7 @@
 <template>
   <main role="main">
-    <div class="album py-5 bg-light">
+    <Spinner v-if="isLoading" />
+    <div class="album py-5 bg-light" v-else>
       <div class="container">
         <UserProfileCard
           :initial-profile="profile"
@@ -30,6 +31,8 @@ import UserFollowingsCard from './../components/UserFollowingsCard.vue';
 import UserFollowersCard from './../components/UserFollowersCard.vue';
 import UserCommentsCard from './../components/UserCommentsCard.vue';
 import UserFavoritedRestaurantsCard from './../components/UserFavoritedRestaurantsCard.vue';
+import Spinner from './../components/Spinner.vue'
+
 import usersAPI from './../apis/users';
 import { Toast } from '../utils/helpers';
 import { mapState } from 'vuex';
@@ -42,6 +45,7 @@ export default {
     UserFollowersCard,
     UserCommentsCard,
     UserFavoritedRestaurantsCard,
+    Spinner
   },
   data() {
     return {
@@ -61,6 +65,7 @@ export default {
       followers: [],
       followings: [],
       isFollowed: false,
+      isLoading: true
     };
   },
   computed: {
@@ -68,11 +73,13 @@ export default {
   },
   created() {
     const { id: userId } = this.$route.params;
-    console.log('id: ', userId);
     this.fetchUser(userId);
   },
   beforeRouteUpdate(to, from, next) {
     const { id } = to.params;
+    console.log('id: ', id);
+
+    console.log(' typeof(id): ', typeof id);
     this.fetchUser(id);
     next();
   },
@@ -112,7 +119,9 @@ export default {
         this.followers = Followers;
         this.followings = Followings;
         this.isFollowed = isFollowed;
+        this.isLoading = false
       } catch (error) {
+        this.isLoading = false
         console.log('error: ', error);
         Toast.fire({
           icon: 'error',
