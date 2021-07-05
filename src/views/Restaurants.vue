@@ -21,7 +21,7 @@
         :next-page="nextPage"
       />
       <div v-if="restaurants.length < 1">
-        此類別目前無餐廳資料
+        此類別目前無餐廳資料，請選擇其他類別
       </div>
     </template>
   </div>
